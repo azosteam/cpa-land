@@ -2,13 +2,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const geo = urlParams.get('geo') || 'unknown';
 
-        // Ловушка: при нажатии "Назад" кидает на Бокс
+        // Ловушка: при нажатии "Назад" на Лендинге летим на Бокс с меткой back=1
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
-            window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
+            window.location.href = `https://azosteam.github.io/cpa-land/box.html?geo=${geo}&back=1`;
         };
 
-        // Отправка формы
+        // Отправка формы (оставляем как было)
         document.getElementById('leadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -28,7 +28,7 @@
                 if (result.success) {
                     window.location.href = 'https://google.com'; 
                 } else {
-                    alert('Ошибка. Попробуйте еще раз.');
+                    alert('Ошибка.');
                     btn.innerText = 'ПОЛУЧИТЬ';
                     btn.disabled = false;
                 }
