@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подождите!</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px 20px; background: #fce4ec; }
+        h1 { color: #c2185b; }
+        .btn { padding: 15px 30px; background: #c2185b; color: white; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold; display: inline-block; margin-top: 20px;}
+    </style>
+</head>
+<body>
+    <h1>Вы уверены, что хотите уйти?</h1>
+    <p>Мы уже подготовили для вас специальное предложение!</p>
+    <a href="#" class="btn" onclick="goBackToLanding(event)">ЗАБРАТЬ БОНУС</a>
+
+    <script>
+        // Ловушка "Назад" на Боксе (кидает на Лендинг)
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            let lpUrl = localStorage.getItem('main_lp');
+            if (lpUrl) {
+                history.pushState(null, null, location.href);
+                window.location.href = lpUrl;
+            }
+        };
+
+        function goBackToLanding(e) {
+            e.preventDefault();
+            let lpUrl = localStorage.getItem('main_lp');
+            if (lpUrl) window.location.href = lpUrl;
+            else window.location.href = 'https://cpa-funnel-api.033-azosteam.workers.dev/'; 
+        }
+    </script>
+</body>
+</html>
