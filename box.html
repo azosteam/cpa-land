@@ -3,34 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подождите!</title>
+    <title>Специальное предложение</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px 20px; background: #fce4ec; }
-        h1 { color: #c2185b; }
-        .btn { padding: 15px 30px; background: #c2185b; color: white; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold; display: inline-block; margin-top: 20px;}
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fce4ec; }
+        .container { max-width: 400px; margin: 0 auto; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #c2185b; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h1>Вы уверены, что хотите уйти?</h1>
-    <p>Мы уже подготовили для вас специальное предложение!</p>
-    <a href="#" class="btn" onclick="goBackToLanding(event)">ЗАБРАТЬ БОНУС</a>
+    <div class="container">
+        <h1>Получи свой бонус!</h1>
+        <p>Введи свои данные и получи доступ.</p>
+        
+        <form id="leadForm">
+            <input type="text" id="name" placeholder="Ваше имя" required>
+            <input type="tel" id="phone" placeholder="Ваш телефон" required>
+            <button type="submit" id="submitBtn">ПОЛУЧИТЬ</button>
+        </form>
+    </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const geo = urlParams.get('geo') || 'unknown';
-        const lpUrl = 'https://azosteam.github.io/cpa-land/landing.html?geo=' + geo;
 
-        // Если нажать "Назад" на боксе, кидаем на лендинг
+        // Ловушка: при нажатии "Назад" на боксе кидает на "Главную"
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
             history.pushState(null, null, location.href);
-            window.location.href = lpUrl;
+            window.location.href = 'https://azosteam.github.io/cpa-land/main.html?geo=' + geo;
         };
 
-        function goBackToLanding(e) {
+        // Отправка формы
+        document.getElementById('leadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            window.location.href = lpUrl;
-        }
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = 'Отправка...';
+            btn.disabled = true;
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+
+            try {
+                const response = await fetch('https://cpa-funnel-api.033-azosteam.workers.dev/api/lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, geo })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = 'https://google.com'; 
+                } else {
+                    alert('Ошибка. Попробуйте еще раз.');
+                    btn.innerText = 'ПОЛУЧИТЬ';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                alert('Ошибка сети.');
+                btn.innerText = 'ПОЛУЧИТЬ';
+                btn.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>
