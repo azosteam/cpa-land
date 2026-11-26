@@ -12,7 +12,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Форма изначально скрыта, чтобы не мигала при редиректе -->
+    <div class="container" id="boxContent" style="display: none;">
         <h1>Получи свой бонус!</h1>
         <p>Введи свои данные и получи доступ.</p>
         <form id="leadForm">
@@ -25,43 +26,46 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const geo = urlParams.get('geo') || 'unknown';
+        const isBack = urlParams.get('back') === '1';
 
-        // Ловушка: при нажатии "Назад" на боксе кидает на "Главную"
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            window.location.href = 'https://azosteam.github.io/cpa-land/main.html?geo=' + geo;
-        };
+        if (isBack) {
+            // Вернулись с Лендинга. Показываем форму Бокса.
+            document.getElementById('boxContent').style.display = 'block';
+            
+            // Ловушка: если жмут Назад, летим на Главную
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                window.location.href = `https://azosteam.github.io/cpa-land/main.html?geo=${geo}&back=1`;
+            };
 
-        // Отправка формы
-        document.getElementById('leadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = 'Отправка...';
-            btn.disabled = true;
+            // Отправка формы
+            document.getElementById('leadForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const btn = document.getElementById('submitBtn');
+                btn.innerText = 'Отправка...';
+                btn.disabled = true;
 
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
 
-            try {
-                const response = await fetch('https://cpa-funnel-api.033-azosteam.workers.dev/api/lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, phone, geo })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    window.location.href = 'https://google.com'; 
-                } else {
-                    alert('Ошибка. Попробуйте еще раз.');
-                    btn.innerText = 'ПОЛУЧИТЬ';
-                    btn.disabled = false;
+                try {
+                    const response = await fetch('https://cpa-funnel-api.033-azosteam.workers.dev/api/lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, phone, geo })
+                    });
+                    const result = await response.json();
+                    if (result.success) window.location.href = 'https://google.com';
+                    else alert('Ошибка.');
+                } catch (error) {
+                    alert('Ошибка сети.');
                 }
-            } catch (error) {
-                alert('Ошибка сети.');
-                btn.innerText = 'ПОЛУЧИТЬ';
-                btn.disabled = false;
-            }
-        });
+            });
+
+        } else {
+            // Первый заход. Моментально летим на Лендинг.
+            window.location.href = `https://azosteam.github.io/cpa-land/landing.html?geo=${geo}`;
+        }
     </script>
 </body>
 </html>
