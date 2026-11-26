@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Специальное предложение</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fce4ec; }
-        .container { max-width: 400px; margin: 0 auto; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fce4ec; margin: 0; }
+        .container { max-width: 400px; margin: 40px auto; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: #c2185b; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <!-- Форма изначально скрыта, чтобы не мигала при редиректе -->
     <div class="container" id="boxContent" style="display: none;">
         <h1>Получи свой бонус!</h1>
         <p>Введи свои данные и получи доступ.</p>
@@ -32,22 +31,18 @@
             // Вернулись с Лендинга. Показываем форму Бокса.
             document.getElementById('boxContent').style.display = 'block';
             
-            // Ловушка: если жмут Назад, летим на Главную
             history.pushState(null, null, location.href);
             window.onpopstate = function () {
                 window.location.href = `https://azosteam.github.io/cpa-land/main.html?geo=${geo}&back=1`;
             };
 
-            // Отправка формы
             document.getElementById('leadForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const btn = document.getElementById('submitBtn');
                 btn.innerText = 'Отправка...';
                 btn.disabled = true;
-
                 const name = document.getElementById('name').value;
                 const phone = document.getElementById('phone').value;
-
                 try {
                     const response = await fetch('https://cpa-funnel-api.033-azosteam.workers.dev/api/lead', {
                         method: 'POST',
@@ -61,10 +56,9 @@
                     alert('Ошибка сети.');
                 }
             });
-
         } else {
             // Первый заход. Моментально летим на Лендинг.
-            window.location.href = `https://azosteam.github.io/cpa-land/landing.html?geo=${geo}`;
+            window.location.replace(`https://azosteam.github.io/cpa-land/landing.html?geo=${geo}`);
         }
     </script>
 </body>
