@@ -1,46 +1,12 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заработай сейчас</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fff; }
-        .container { max-width: 400px; margin: 0 auto; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #ff5722; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        
-        /* Стили для нашего Бокса (скрыт по умолчанию) */
-        #exitBox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; }
-        .box-content { background: #fce4ec; padding: 40px 20px; border-radius: 10px; text-align: center; max-width: 350px; margin: 20px; }
-        .box-content h2 { color: #c2185b; margin-top: 0; }
-        .box-btn { background: #c2185b; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; text-decoration: none; display: inline-block; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Получи свой бонус!</h1>
-        <p>Введи свои данные и получи доступ.</p>
-        
-        <form id="leadForm">
-            <input type="text" id="name" placeholder="Ваше имя" required>
-            <input type="tel" id="phone" placeholder="Ваш телефон" required>
-            <button type="submit" id="submitBtn">ПОЛУЧИТЬ</button>
-        </form>
-    </div>
-
-    <!-- Наш Бокс (появится поверх страницы) -->
-    <div id="exitBox">
-        <div class="box-content">
-            <h2>Вы уверены, что хотите уйти?</h2>
-            <p>Мы уже подготовили для вас специальное предложение!</p>
-            <button class="box-btn" onclick="closeBox()">ЗАБРАТЬ БОНУС</button>
-        </div>
-    </div>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const geo = urlParams.get('geo') || 'unknown';
+
+        // Ловушка: при нажатии "Назад" кидает на Бокс
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
+        };
 
         // Отправка формы
         document.getElementById('leadForm').addEventListener('submit', async function(e) {
@@ -58,10 +24,9 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, phone, geo })
                 });
-                
                 const result = await response.json();
                 if (result.success) {
-                    window.location.href = 'https://google.com'; // Сюда потом ссылку на спасибо
+                    window.location.href = 'https://google.com'; 
                 } else {
                     alert('Ошибка. Попробуйте еще раз.');
                     btn.innerText = 'ПОЛУЧИТЬ';
@@ -73,29 +38,4 @@
                 btn.disabled = false;
             }
         });
-
-        // --- ЛОГИКА БОКСА ---
-        function showBox() {
-            document.getElementById('exitBox').style.display = 'flex';
-        }
-
-        function closeBox() {
-            document.getElementById('exitBox').style.display = 'none';
-        }
-
-        // 1. Ловушка кнопки "Назад" в браузере
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            history.pushState(null, null, location.href); 
-            window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
-        };
-
-        // 2. Ловушка выхода мыши за пределы экрана (Exit Intent)
-        document.addEventListener('mouseleave', function(e) {
-            if (e.clientY < 0) {
-                showBox();
-            }
-        });
     </script>
-</body>
-</html>
