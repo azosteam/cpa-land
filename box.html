@@ -16,21 +16,20 @@
     <a href="#" class="btn" onclick="goBackToLanding(event)">ЗАБРАТЬ БОНУС</a>
 
     <script>
-        // Ловушка "Назад" на Боксе (кидает на Лендинг)
+        const urlParams = new URLSearchParams(window.location.search);
+        const geo = urlParams.get('geo') || 'unknown';
+        const lpUrl = 'https://azosteam.github.io/cpa-land/landing.html?geo=' + geo;
+
+        // Если нажать "Назад" на боксе, кидаем на лендинг
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
-            let lpUrl = localStorage.getItem('main_lp');
-            if (lpUrl) {
-                history.pushState(null, null, location.href);
-                window.location.href = lpUrl;
-            }
+            history.pushState(null, null, location.href);
+            window.location.href = lpUrl;
         };
 
         function goBackToLanding(e) {
             e.preventDefault();
-            let lpUrl = localStorage.getItem('main_lp');
-            if (lpUrl) window.location.href = lpUrl;
-            else window.location.href = 'https://cpa-funnel-api.033-azosteam.workers.dev/'; 
+            window.location.href = lpUrl;
         }
     </script>
 </body>
