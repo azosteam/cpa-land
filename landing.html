@@ -87,7 +87,7 @@
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
             history.pushState(null, null, location.href); 
-            showBox(); // Показываем бокс вместо ухода
+            window.location.href = 'https://azosteam.github.io/cpa-land/box.html?geo=' + geo;
         };
 
         // 2. Ловушка выхода мыши за пределы экрана (Exit Intent)
