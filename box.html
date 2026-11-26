@@ -15,7 +15,6 @@
     <div class="container">
         <h1>Получи свой бонус!</h1>
         <p>Введи свои данные и получи доступ.</p>
-        
         <form id="leadForm">
             <input type="text" id="name" placeholder="Ваше имя" required>
             <input type="tel" id="phone" placeholder="Ваш телефон" required>
@@ -30,7 +29,6 @@
         // Ловушка: при нажатии "Назад" на боксе кидает на "Главную"
         history.pushState(null, null, location.href);
         window.onpopstate = function () {
-            history.pushState(null, null, location.href);
             window.location.href = 'https://azosteam.github.io/cpa-land/main.html?geo=' + geo;
         };
 
